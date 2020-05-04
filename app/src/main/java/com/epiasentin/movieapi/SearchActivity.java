@@ -31,7 +31,7 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+        setContentView(R.layout.activity_main);
 
         search = findViewById(R.id.editTextSearch);
         title = findViewById(R.id.textViewTitle);
@@ -48,51 +48,51 @@ public class SearchActivity extends AppCompatActivity {
                     search.setText("");
                     search.requestFocus();
                 } else {
-                    String url = "http://www.omdbapi.com/?t=Rocketman&apikey=bacbcffb";
-                    //String url = "http://www.omdbapi.com/?t=" + message + "&apikey=bacbcffb";
-
-                    StringRequest stringRequest = new StringRequest
-                            (Request.Method.GET, url, new Response.Listener<String>() {
-
-                                @Override
-                                public void onResponse(String response) {
-                                    //title.setText("Response: " + response.toString());
-
-
-                                    String titleStr = null;
-                                    String yearStr = null;
-                                    String posterStr = null;
-
-                                    try {
-                                        JSONObject jsonObj = new JSONObject(response);
-                                        titleStr = jsonObj.getString("Title");
-                                        yearStr = jsonObj.getString("Year");
-                                        posterStr = jsonObj.getString("Poster");
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    title.setText(titleStr);
-                                    year.setText(yearStr);
-                                    poster.setText(posterStr);
-
-                                }
-                            }, new Response.ErrorListener() {
-
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    // TODO: Handle error
-                                    title.setText("That didn't work!");
-                                }
-                            });
-
-                    //Access the RequestQueue through your singleton class.
-                    MySingleton.getInstance(this).addToRequestQueue(stringRequest);
+                    searchAPI(message);
                 }
 
             }
         });
+    }
 
+
+    public void searchAPI (String message) {
+        String url = "http://www.omdbapi.com/?t=" + message + "&apikey=bacbcffb";
+
+        StringRequest stringRequest = new StringRequest
+                (Request.Method.GET, url, new Response.Listener<String>() {
+
+                    @Override
+                    public void onResponse(String response) {
+
+                        String titleStr = null;
+                        String yearStr = null;
+                        String posterStr = null;
+
+                        try { //Get the JSON Objects from the API
+                            JSONObject jsonObj = new JSONObject(response);
+                            titleStr = jsonObj.getString("Title");
+                            yearStr = jsonObj.getString("Year");
+                            posterStr = jsonObj.getString("Poster");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        //Assign the values to the Text Views
+                        title.setText(titleStr);
+                        year.setText(yearStr);
+                        poster.setText(posterStr);
+
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+                        title.setText("That didn't work!");
+                    }
+                });
+        //Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(this).addToRequestQueue(stringRequest);
     }
 
     @Override
@@ -103,3 +103,4 @@ public class SearchActivity extends AppCompatActivity {
     }
 
 }
+
