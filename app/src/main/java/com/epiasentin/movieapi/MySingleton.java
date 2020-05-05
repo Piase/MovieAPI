@@ -1,9 +1,9 @@
 package com.epiasentin.movieapi;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.LruCache;
-import android.view.View;
+
+import androidx.fragment.app.Fragment;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -14,9 +14,9 @@ public class MySingleton {
     private static MySingleton instance;
     private RequestQueue requestQueue;
     private ImageLoader imageLoader;
-    private static Context ctx;
+    private static Fragment ctx;
 
-    private MySingleton(Context context) {
+    private MySingleton(Fragment context) {
         ctx = context;
         requestQueue = getRequestQueue();
 
@@ -37,9 +37,9 @@ public class MySingleton {
                 });
     }
 
-    public static synchronized MySingleton getInstance(Context context) {
+    public static synchronized MySingleton getInstance(Fragment fragment) {
         if (instance == null) {
-            instance = new MySingleton(context);
+            instance = new MySingleton(fragment);
         }
         return instance;
     }
@@ -48,7 +48,7 @@ public class MySingleton {
         if (requestQueue == null) {
             // getApplicationContext() is key, it keeps you from leaking the
             // Activity or BroadcastReceiver if someone passes one in.
-            requestQueue = Volley.newRequestQueue(ctx.getApplicationContext());
+            requestQueue = Volley.newRequestQueue(ctx.getContext());
         }
         return requestQueue;
     }
@@ -61,4 +61,3 @@ public class MySingleton {
         return imageLoader;
     }
 }
-

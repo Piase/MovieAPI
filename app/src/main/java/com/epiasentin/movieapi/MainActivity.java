@@ -66,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
                                         Log.d(TAG, "signInWithEmail:success");
                                         Toast.makeText(MainActivity.this, "Login Successful. \n Welcome to the Movie App",
                                                 Toast.LENGTH_SHORT).show();
-                                        Intent inToHome = new Intent (getApplicationContext(), HomeActivity.class);
-                                        startActivity(inToHome);
+                                        Intent inToTab = new Intent (getApplicationContext(), TabActivity.class);
+                                        startActivity(inToTab);
                                         finish();
                                     } else {
                                         // If sign in fails, display a message to the user.
@@ -91,8 +91,8 @@ public class MainActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null){
-            Intent inToHome = new Intent (getApplicationContext(), HomeActivity.class);
-            startActivity(inToHome);
+            Intent inToTab = new Intent (getApplicationContext(), TabActivity.class);
+            startActivity(inToTab);
             finish();
         }
     }
