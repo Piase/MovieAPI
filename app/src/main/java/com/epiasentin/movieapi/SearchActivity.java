@@ -1,6 +1,7 @@
 package com.epiasentin.movieapi;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,12 +22,19 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SearchActivity extends Fragment {
 
-    public static final String TAG = "MyTag";
+    public static final String TAG = "SearchTag";
     StringRequest stringRequest;
     RequestQueue requestQueue;
 
@@ -35,6 +44,7 @@ public class SearchActivity extends Fragment {
     Button searchBtn;
     Button posterBtn;
     WebView posterWv;
+    ImageView favoriteStar;
 
     String titleStr = null;
     String releasedStr = null;
@@ -42,6 +52,8 @@ public class SearchActivity extends Fragment {
     String runtimeStr = null;
     String ratedStr = null;
     String ratingStr = null;
+
+    FirebaseFirestore db;
 
     @Nullable
     @Override
@@ -59,6 +71,9 @@ public class SearchActivity extends Fragment {
         posterBtn = view.findViewById(R.id.buttonPoster);
         posterWv = view.findViewById(R.id.webViewPoster);
         posterWv.setWebViewClient(new MyBrowser());
+        favoriteStar = view.findViewById(R.id.imageViewFav);
+
+        db = FirebaseFirestore.getInstance();
 
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +89,7 @@ public class SearchActivity extends Fragment {
             }
         });
 
+        favoriteStar.setVisibility(View.INVISIBLE);
         posterBtn.setVisibility(View.INVISIBLE);
         posterWv.setVisibility(View.INVISIBLE);
 
@@ -92,9 +108,39 @@ public class SearchActivity extends Fragment {
                 posterWv.getSettings().setLoadWithOverviewMode(true);
                 posterWv.getSettings().setUseWideViewPort(true);
                 posterWv.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-                
+
                 posterWv.loadData(html, "text/html", null);
 
+            }
+        });
+
+        favoriteStar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View v) {
+                favoriteStar.setImageResource(R.drawable.yellow_star);
+
+                Map<String, Object> fav = new HashMap<>();
+                fav.put("title", titleStr);
+                fav.put("released", releasedStr);
+                fav.put("duration", runtimeStr);
+                fav.put("rated", ratedStr);
+                fav.put("rating", ratingStr);
+                fav.put("poster", posterStr);
+
+                db.collection("favorites")
+                        .add(fav)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error adding document", e);
+                            }
+                        });
             }
         });
     }
@@ -137,7 +183,7 @@ public class SearchActivity extends Fragment {
         MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
         posterBtn.setVisibility(View.VISIBLE);
         posterWv.setVisibility(View.INVISIBLE);
-
+        favoriteStar.setVisibility(View.VISIBLE);
     }
 
     @Override

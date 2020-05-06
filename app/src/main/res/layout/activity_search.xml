@@ -27,6 +27,14 @@
         app:layout_constraintBottom_toBottomOf="@+id/editTextSearch"
         app:layout_constraintStart_toEndOf="@+id/editTextSearch" />
 
+    <ImageView
+        android:id="@+id/imageViewFav"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:src="@drawable/gray_star"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonSearch"
+        app:layout_constraintStart_toEndOf="@+id/buttonSearch" />
+
     <TextView
         android:id="@+id/textViewTitle"
         android:layout_width="wrap_content"
