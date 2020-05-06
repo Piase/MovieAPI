@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="5dp"
         android:ems="10"
         android:hint="Enter Title"
         android:inputType="textPersonName"
@@ -31,39 +31,51 @@
         android:id="@+id/textViewTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="5dp"
         android:text="Movie Title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextSearch" />
 
     <TextView
-        android:id="@+id/textViewYear"
+        android:id="@+id/textViewInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Year of the Movie"
+        android:layout_marginTop="5dp"
+        android:text="Information about the Movie"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
 
-    <TextView
-        android:id="@+id/textViewPoster"
+    <WebView
+        android:id="@+id/webViewPoster"
+        android:layout_width="385dp"
+        android:layout_height="580dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.457"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewInfo" />
+
+    <Button
+        android:id="@+id/buttonPoster"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Poster of the Movie"
+        android:layout_marginTop="5dp"
+        android:text="See Poster"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewYear" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewInfo" />
 
     <TextView
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="35dp"
+        android:layout_marginBottom="5dp"
         android:text="Eric de Souza Piasentin - Z23348796"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

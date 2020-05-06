@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -29,9 +31,17 @@ public class SearchActivity extends Fragment {
 
     EditText search;
     TextView title;
-    TextView year;
-    TextView poster;
+    TextView info;
     Button searchBtn;
+    Button posterBtn;
+    WebView posterWv;
+
+    String titleStr = null;
+    String releasedStr = null;
+    String posterStr = null;
+    String runtimeStr = null;
+    String ratedStr = null;
+    String ratingStr = null;
 
     @Nullable
     @Override
@@ -44,9 +54,11 @@ public class SearchActivity extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         search = view.findViewById(R.id.editTextSearch);
         title = view.findViewById(R.id.textViewTitle);
-        year = view.findViewById(R.id.textViewYear);
-        poster = view.findViewById(R.id.textViewPoster);
+        info = view.findViewById(R.id.textViewInfo);
         searchBtn = view.findViewById(R.id.buttonSearch);
+        posterBtn = view.findViewById(R.id.buttonPoster);
+        posterWv = view.findViewById(R.id.webViewPoster);
+        posterWv.setWebViewClient(new MyBrowser());
 
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +73,30 @@ public class SearchActivity extends Fragment {
                 }
             }
         });
+
+        posterBtn.setVisibility(View.INVISIBLE);
+        posterWv.setVisibility(View.INVISIBLE);
+
+        posterBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                posterBtn.setVisibility(View.INVISIBLE);
+                posterWv.setVisibility(View.VISIBLE);
+
+                //Get poster URL and makes it fit the WebView in its full size.
+                String posterUrl = posterStr;
+                String html = "<html><body><img src=\"" + posterUrl + "\" width=\"100%\" height=\"100%\"\"/></body></html>";
+
+                posterWv.getSettings().setLoadsImagesAutomatically(true);
+                posterWv.getSettings().setJavaScriptEnabled(true);
+                posterWv.getSettings().setLoadWithOverviewMode(true);
+                posterWv.getSettings().setUseWideViewPort(true);
+                posterWv.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+                
+                posterWv.loadData(html, "text/html", null);
+
+            }
+        });
     }
 
     public void searchAPI (String message) {
@@ -72,28 +108,21 @@ public class SearchActivity extends Fragment {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        //title.setText("Response: " + response.toString());
-
-                        String titleStr = null;
-                        String yearStr = null;
-                        String posterStr = null;
 
                         try {
-                            //JSONObject jsonObj = new JSONObject(response);
-                            //titleStr = jsonObj.getString("Title");
-                            //yearStr = jsonObj.getString("Year");
-                            //posterStr = jsonObj.getString("Poster");
-
                             titleStr = response.getString("Title");
-                            yearStr = response.getString("Year");
+                            releasedStr = response.getString("Released");
                             posterStr = response.getString("Poster");
+                            runtimeStr = response.getString("Runtime");
+                            ratedStr = response.getString("Rated");
+                            ratingStr = response.getString("imdbRating");
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
 
                         title.setText(titleStr);
-                        year.setText(yearStr);
-                        poster.setText(posterStr);
+                        info.setText("Released: " + releasedStr + ", Duration: " + runtimeStr + "\n Rated: " + ratedStr + ", IMDB Rating: " + ratingStr + "/10");
 
                     }
                 }, new Response.ErrorListener() {
@@ -106,6 +135,9 @@ public class SearchActivity extends Fragment {
                 });
         //Access the RequestQueue through your singleton class.
         MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+        posterBtn.setVisibility(View.VISIBLE);
+        posterWv.setVisibility(View.INVISIBLE);
+
     }
 
     @Override
@@ -115,4 +147,11 @@ public class SearchActivity extends Fragment {
             requestQueue.cancelAll(TAG); }
     }
 
+    private class MyBrowser extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
+        }
+    }
 }
