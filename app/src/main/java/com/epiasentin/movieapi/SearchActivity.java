@@ -24,7 +24,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONObject;
@@ -127,12 +126,12 @@ public class SearchActivity extends Fragment {
                 fav.put("rating", ratingStr);
                 fav.put("poster", posterStr);
 
-                db.collection("favorites")
-                        .add(fav)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                db.collection("favorites").document(titleStr)
+                        .set(fav)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "DocumentSnapshot succesfully added");
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -166,9 +165,9 @@ public class SearchActivity extends Fragment {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-
+                        //Display of movie information
                         title.setText(titleStr);
-                        info.setText("Released: " + releasedStr + ", Duration: " + runtimeStr + "\n Rated: " + ratedStr + ", IMDB Rating: " + ratingStr + "/10");
+                        info.setText("Released: " + releasedStr + ", Duration: " + runtimeStr + "\nRated: " + ratedStr + ", IMDB Rating: " + ratingStr + "/10");
 
                     }
                 }, new Response.ErrorListener() {
@@ -184,7 +183,9 @@ public class SearchActivity extends Fragment {
         posterBtn.setVisibility(View.VISIBLE);
         posterWv.setVisibility(View.INVISIBLE);
         favoriteStar.setVisibility(View.VISIBLE);
+        favoriteStar.setImageResource(R.drawable.gray_star);
     }
+
 
     @Override
     public void onStop() {

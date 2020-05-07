@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         pw = findViewById(R.id.editTextPw);
         mAuth = FirebaseAuth.getInstance();
 
+        //Sign Up Button Event
         btnSU.setOnClickListener(new View.OnClickListener() { //Redirects to user to Register Activity on click
             @Override
             public void onClick(View v) {
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Sign In Button Event
         btnSI.setOnClickListener(new View.OnClickListener() { //Signs In User
             @Override
             public void onClick(View v) {
@@ -85,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //Allows the user to connect automatically if current user redirecting to Home Page
     @Override
     public void onStart() {
         super.onStart();

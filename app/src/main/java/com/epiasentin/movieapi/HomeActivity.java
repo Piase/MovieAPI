@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,17 +32,20 @@ public class HomeActivity extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //Assigned Variables
         username = view.findViewById(R.id.textViewUser);
         logoff = view.findViewById(R.id.buttonLogout);
 
         mAuth = FirebaseAuth.getInstance();
 
+        //Displaying current user email
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null){
             String name = user.getEmail();
             username.setText(name);
         }
 
+        //Log off Button event
         logoff.setOnClickListener(new View.OnClickListener() { //Log out button to exit app.
             @Override
             public void onClick(View v) {

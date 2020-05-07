@@ -28,6 +28,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         mContext = context;
     }
 
+    //Setting up the fragments for tab functionality
     @Override
     public Fragment getItem(int position) {
         Fragment fragment = null;

@@ -36,6 +36,7 @@ public class RegisterActivity extends AppCompatActivity {
         pwSU2 = findViewById(R.id.editTextPasswordSU2);
         mAuth = FirebaseAuth.getInstance();
 
+        //Registe Button Event
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,6 +91,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    //Allows the user to connect automatically if current user redirecting to Home Page
     @Override
     public void onStart() {
         super.onStart();
